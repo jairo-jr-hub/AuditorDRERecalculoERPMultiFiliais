@@ -86,7 +86,7 @@
         .val-negative { color: var(--danger); font-weight: 600; font-family: 'Fira Code', monospace; }
         .val-positive { font-weight: 500; font-family: 'Fira Code', monospace; }
 
-        /* Botões de Expansão */
+        /* Botões de Expansão (Vermelhos quando abertos para padrão UX) */
         .btn-expand { background: var(--primary); border: none; border-radius: 4px; width: 20px; height: 20px; line-height: 18px; text-align: center; cursor: pointer; font-weight: 800; color: #ffffff; margin-right: 10px; display: inline-flex; justify-content: center; align-items: center; transition: 0.2s; flex-shrink: 0; }
         .btn-expand:hover { background: var(--primary-hover); transform: scale(1.05); }
         .btn-expand.open { background: var(--danger); color: #ffffff; box-shadow: none; } 
@@ -129,7 +129,7 @@
             font-family: 'Inter', sans-serif;
         }
 
-        /* O Quadro da Regra que fica Amarelo Claro (#fff8cd) */
+        /* O Quadro da Regra que fica com o MESMO AMARELO da tabela (#fff8cd) */
         .summary-math-box {
             background: #f4f8fb;
             border: 1px solid #cbdde9;
@@ -147,7 +147,7 @@
         }
         
         .summary-math-box.math-token-locked {
-            background-color: #fff8cd !important;
+            background-color: #fff8cd !important; /* Mesma tonalidade exata da tabela amarela! */
             border-color: #fbc02d !important;
             box-shadow: 0 4px 12px rgba(251, 192, 45, 0.1) !important;
         }
@@ -323,17 +323,6 @@
 
 <script>
     let lockedHighlight = false;
-
-    // A trava só é liberada se clicar no vazio (Ignora botões [+] e o quadro amarelo)
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.math-token') && 
-            !e.target.closest('.summary-math-box') && 
-            !e.target.closest('.btn-expand') && 
-            !e.target.closest('.sub-btn')) {
-            lockedHighlight = false;
-            clearHighlights(true);
-        }
-    });
 
     function clearInput(inputId) {
         document.getElementById(inputId).value = '';
@@ -605,9 +594,7 @@
             });
         });
 
-        // ==========================================
-        // PROVA REAL TOTALMENTE RESTAURADA (Padrão Original)
-        // ==========================================
+        // PROVA REAL RESTAURADA
         rules.forEach(item => {
             if (item.tipo.includes('FÓRMULA') || item.tipo.includes('FORMULA')) {
                 let calcData = evaluateFormulaMath(item.formula, itemsMap, item.codigo);
@@ -647,10 +634,10 @@
                 involvedIds.push(id);
                 let rawVal = itemsMap.get(id).calculatedValue || 0;
                 
-                // MÁGICA RESTAURADA: Ele sempre soma o valor literal para respeitar o banco de dados.
+                // MÁGICA RESTAURADA: Soma direto, o ERP já traz o sinal correto!
                 result += rawVal; 
                 
-                // O operador do CSV serve APENAS para inverter o visual, se for negativo.
+                // O operador é apenas visual para aplicar os parênteses
                 let operandValue = (operator === '-') ? -rawVal : rawVal; 
                 let colorRecalc = rawVal < 0 ? 'var(--danger)' : 'var(--success)';
                 
@@ -685,7 +672,7 @@
                 let rawValCalc = fData.calcVal || 0;
                 let rawValPdf = fData.pdfVal || 0;
                 
-                // MÁGICA RESTAURADA: Regra diferente de soma para o ERP vs PDF
+                // MÁGICA RESTAURADA
                 resultCalc += rawValCalc; 
                 let effectPdf = (operator === '-') ? -Math.abs(rawValPdf) : rawValPdf;
                 resultPdf += effectPdf;
@@ -769,7 +756,6 @@
                 let detalheConteudo = `<div class="master-detail-box" id="master-box-${rule.codigo}">`;
                 
                 if (isFormula) {
-                    
                     let literalPdfCalcResult = 0;
                     let memPdfHtmlConsolidated = '';
                     let cleanExp = formulaStr.replace(/\([^)]+\)/g, '').trim().replace(/\s+/g, ''); 
@@ -797,8 +783,8 @@
                     }
 
                     // Formatadores exatos que resgatam o sinal final da string ("= - R$ 2.570,69")
-                    let finalResultSign = visualCalcValue < 0 ? '- ' : '';
-                    let cleanBrlResult = formatBRL(Math.abs(visualCalcValue)).replace(/[R\$\(\)\s]/g, '').trim();
+                    let finalResultSign = calcValue < 0 ? '- ' : '';
+                    let cleanBrlResult = formatBRL(Math.abs(calcValue)).replace(/[R\$\(\)\s]/g, '').trim();
                     
                     let finalPdfSign = literalPdfCalcResult < 0 ? '- ' : '';
                     let cleanBrlPdf = formatBRL(Math.abs(literalPdfCalcResult)).replace(/[R\$\(\)\s]/g, '').trim();
@@ -830,7 +816,7 @@
                                 <div>
                                     <span style="font-weight: 800; font-size: 0.75rem; color: #1e6153; text-transform: uppercase; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">🧮 Total Consolidado (Recálculo ERP):</span>
                                     <div class="inner-box">
-                                        ${memoryRecalcHtml} <b style="color: ${visualCalcValue < 0 ? 'var(--danger)' : 'var(--primary)'}; font-family: 'Inter', sans-serif; margin-left: 8px;"> = ${finalResultSign}R$ ${cleanBrlResult}</b>
+                                        ${memoryRecalcHtml} <b style="color: ${calcValue < 0 ? 'var(--danger)' : 'var(--primary)'}; font-family: 'Inter', sans-serif; margin-left: 8px;"> = ${finalResultSign}R$ ${cleanBrlResult}</b>
                                     </div>
                                 </div>
                                 <div>
@@ -891,7 +877,7 @@
                         }
 
                         let btnSubExpandHtml = isFormula 
-                            ? `<button class="sub-btn" data-target="${subDetailClass}" onclick="toggleDetails(this, '${subDetailClass}')">+</button>`
+                            ? `<button class="sub-btn" data-target="${subDetailClass}" onclick="event.stopPropagation(); toggleDetails(this, '${subDetailClass}')">+</button>`
                             : `<span style="display:inline-block; width:24px;"></span>`;
 
                         let displayFName = fName.length > 50 ? fName.substring(0, 47) + '...' : fName;
@@ -912,8 +898,8 @@
                         `;
 
                         if (isFormula) {
-                            let finalResultSignFilial = visualCalcValueBranch < 0 ? '- ' : '';
-                            let cleanBrlResultFilial = formatBRL(Math.abs(visualCalcValueBranch)).replace(/[R\$\(\)\s]/g, '').trim();
+                            let finalResultSignFilial = fData.calcVal < 0 ? '- ' : '';
+                            let cleanBrlResultFilial = formatBRL(Math.abs(fData.calcVal)).replace(/[R\$\(\)\s]/g, '').trim();
                             
                             let finalPdfSignFilial = fData.pdfValCalculated < 0 ? '- ' : '';
                             let cleanBrlPdfFilial = formatBRL(Math.abs(fData.pdfValCalculated)).replace(/[R\$\(\)\s]/g, '').trim();
@@ -936,7 +922,7 @@
                                             <div>
                                                 <span style="font-weight: 800; font-size: 0.7rem; color: #1e6153; text-transform: uppercase; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">🧮 Equação isolada desta filial (Recálculo):</span>
                                                 <div class="inner-box">
-                                                    ${fData.memRecalcHtml} <b style="color: ${visualCalcValueBranch < 0 ? 'var(--danger)' : 'var(--primary)'}; font-family: 'Inter', sans-serif; margin-left: 8px;"> = ${finalResultSignFilial}R$ ${cleanBrlResultFilial}</b>
+                                                    ${fData.memRecalcHtml} <b style="color: ${fData.calcVal < 0 ? 'var(--danger)' : 'var(--primary)'}; font-family: 'Inter', sans-serif; margin-left: 8px;"> = ${finalResultSignFilial}R$ ${cleanBrlResultFilial}</b>
                                                 </div>
                                             </div>
                                             <div>
