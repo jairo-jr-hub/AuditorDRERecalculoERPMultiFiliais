@@ -86,15 +86,14 @@
         .val-negative { color: var(--danger); font-weight: 600; font-family: 'Fira Code', monospace; }
         .val-positive { font-weight: 500; font-family: 'Fira Code', monospace; }
 
-        /* Botões de Expansão (Nível 1) - AMARELOS quando abertos */
+        /* Botões de Expansão */
         .btn-expand { background: var(--primary); border: none; border-radius: 4px; width: 20px; height: 20px; line-height: 18px; text-align: center; cursor: pointer; font-weight: 800; color: #ffffff; margin-right: 10px; display: inline-flex; justify-content: center; align-items: center; transition: 0.2s; flex-shrink: 0; }
         .btn-expand:hover { background: var(--primary-hover); transform: scale(1.05); }
-        .btn-expand.open { background: #fbc02d; color: #1a2c3e; box-shadow: 0 0 0 1px #d4a017; } 
+        .btn-expand.open { background: var(--danger); color: #ffffff; box-shadow: none; } 
         .btn-expand.is-formula-btn { background: var(--success); }
         .btn-expand.is-formula-btn:hover { background: #216658; }
-        .btn-expand.is-formula-btn.open { background: #fbc02d; color: #1a2c3e; box-shadow: 0 0 0 1px #d4a017; }
+        .btn-expand.is-formula-btn.open { background: var(--danger); color: #ffffff; box-shadow: none; }
         
-        /* Sub Botão da Filial */
         .sub-btn { width: 16px; height: 16px; font-size: 11px; line-height: 14px; background: var(--success); color: white; border: none; border-radius: 3px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; margin-right: 8px; transition: 0.2s; font-family: monospace; font-weight: bold;}
         .sub-btn:hover { background: #216658; }
         .sub-btn.open { background: var(--danger); }
@@ -123,33 +122,39 @@
 
         /* Mestre Caixa de Auditoria */
         .master-detail-box {
-            background: #f8fbff;
-            border: 1px solid var(--border-highlight);
+            background: transparent;
             border-radius: 8px;
-            padding: 16px;
+            padding: 0;
             transition: all 0.2s ease-in-out;
             font-family: 'Inter', sans-serif;
         }
 
-        /* O "Lock" Amarelo que pega a caixa inteira */
-        .master-detail-box.math-token-locked {
-            background-color: #fffce0 !important;
-            border: 2px solid #fbc02d !important;
-            padding: 15px !important; /* compensa a borda */
-            box-shadow: 0 4px 14px rgba(251, 192, 45, 0.2) !important;
+        /* O Quadro da Regra que fica Amarelo Claro (#fff8cd) */
+        .summary-math-box {
+            background: #f4f8fb;
+            border: 1px solid #cbdde9;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
-
-        .master-detail-box.math-token-locked .math-token-group { background: #fff2b2 !important; border-color: #fbc02d !important; }
-        .master-detail-box.math-token-locked .inner-box { background: #fff2b2 !important; border-color: #fce788 !important; }
-        .master-detail-box.math-token-locked .sub-table { border-color: #fbc02d !important; background: #fffce0 !important; }
-        .master-detail-box.math-token-locked .sub-table th { background-color: #ffeba1 !important; color: #8c6a00 !important; border-bottom-color: #fbc02d !important; }
-        .master-detail-box.math-token-locked .sub-table td { border-bottom-color: #fff2b2 !important; }
-        .master-detail-box.math-token-locked .sub-table tr:hover td { background-color: #ffebb3 !important; }
-        .master-detail-box.math-token-locked .sub-detail-formula td { background: #fffdf0 !important; border-bottom-color: #fbc02d !important; box-shadow: inset 4px 0 0 0 #fbc02d !important; }
+        .summary-math-box:hover {
+            border-color: #a3d9cf;
+            background: #eef8f6;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(42,127,110,0.05);
+        }
+        
+        .summary-math-box.math-token-locked {
+            background-color: #fff8cd !important;
+            border-color: #fbc02d !important;
+            box-shadow: 0 4px 12px rgba(251, 192, 45, 0.1) !important;
+        }
 
         /* Sub Tabela de Filiais */
         .sub-table { width: 100%; border-collapse: collapse; background: #ffffff; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-highlight); transition: all 0.2s; }
-        .sub-table th { background: #eef2f7; color: #1a5d7d; font-size: 0.75rem; font-weight: 700; padding: 8px 12px; border-bottom: 2px solid var(--border-highlight); transition: all 0.2s; }
+        .sub-table th { background: #eef2f7; color: #1a5d7d; font-size: 0.75rem; font-weight: 700; padding: 8px 12px; border-bottom: 2px solid var(--border-highlight); font-family: 'Inter', sans-serif;}
         .sub-table td { padding: 6px 12px; font-size: 0.75rem; border-bottom: 1px solid #f0f5fa; vertical-align: middle; transition: all 0.2s; }
         .sub-table tr:last-child td { border-bottom: none; }
         .sub-table tr:hover td { background-color: #f8fbff; }
@@ -159,6 +164,10 @@
             font-size: 0.8rem; font-family: 'Fira Code', monospace; 
             background: #ffffff; padding: 8px 12px; border-radius: 6px; 
             border: 1px solid #e0e9f0; transition: all 0.2s;
+        }
+        
+        .summary-math-box.math-token-locked .inner-box {
+            border-color: #fbc02d;
         }
 
         footer { text-align: center; font-size: 0.75rem; margin-top: 8px; color: #7c94ab; border-top: 1px solid var(--border-highlight); padding-top: 12px; line-height: 1.5; }
@@ -173,20 +182,7 @@
         .math-token:active { transform: scale(0.98); }
         .math-token.math-token-locked { background-color: #fff8cd !important; box-shadow: inset 0 0 0 1px #fbc02d !important; color: #8c6a00 !important; }
         
-        /* O Gatilho da Regra Aplicada */
-        .math-token-group {
-            font-size: 1rem; font-weight: 700; color: #1e6153; 
-            background: #e6f4f1; padding: 14px 18px; border-radius: 8px; 
-            border: 1px solid #a3d9cf; cursor: pointer; width: 100%; 
-            margin-bottom: 16px; display: flex; align-items: center; gap: 8px; 
-            transition: all 0.2s;
-        }
-        .math-token-group:hover {
-            background: #d8f0eb; border-color: #89ccbd; transform: translateY(-1px); box-shadow: 0 2px 4px rgba(42,127,110,0.1);
-        }
-        .math-token-group:active { transform: translateY(0); box-shadow: none; }
-        
-        /* Destaques nas Linhas de Resultado (Highlight Targets) */
+        /* Destaques nas Linhas de Resultado */
         tbody tr.highlight-row-target td, tbody tr.highlight-row-target.row-is-formula td, tbody tr.highlight-row-target.parent-expanded td, tbody tr.highlight-row-target.parent-expanded.row-is-formula td { background-color: #fff8cd !important; }
         tbody tr.highlight-row-target td:first-child, tbody tr.highlight-row-target.row-is-formula td:first-child, tbody tr.highlight-row-target.parent-expanded td:first-child, tbody tr.highlight-row-target.parent-expanded.row-is-formula td:first-child { box-shadow: inset 4px 0 0 0 #fbc02d !important; }
 
@@ -206,7 +202,7 @@
             .btn-expand, .sub-btn { display: none !important; }
             .status-badge { border: none !important; background: transparent !important; color: #000 !important; padding: 0 !important; }
             .diff-erro, .val-negative { color: #000 !important; font-weight: bold !important; } 
-            .master-detail-box { border: none !important; padding: 0 !important; background: #fff !important; }
+            .master-detail-box, .summary-math-box { border: none !important; padding: 0 !important; background: #fff !important; }
             tr.parent-expanded td { background-color: #e8f0f5 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .row-totalizador td { background-color: #eef5fa !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .row-is-formula td { background-color: #e6f4f1 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -328,9 +324,12 @@
 <script>
     let lockedHighlight = false;
 
-    // Se clicar fora, limpa os destaques amarelos
+    // A trava só é liberada se clicar no vazio (Ignora botões [+] e o quadro amarelo)
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.math-token') && !e.target.closest('.math-token-group') && !e.target.closest('.master-detail-box')) {
+        if (!e.target.closest('.math-token') && 
+            !e.target.closest('.summary-math-box') && 
+            !e.target.closest('.btn-expand') && 
+            !e.target.closest('.sub-btn')) {
             lockedHighlight = false;
             clearHighlights(true);
         }
@@ -395,7 +394,7 @@
         if (isClick && el) { el.classList.add('math-token-locked'); }
     };
 
-    window.highlightMultipleRows = function(ids, formulaId, isClick = false, masterBox = null) {
+    window.highlightMultipleRows = function(ids, formulaId, isClick = false, summaryBox = null) {
         let lockKey = 'group_' + ids.join(',') + '_' + formulaId;
         if (lockedHighlight && !isClick) return;
         if (isClick) {
@@ -411,7 +410,7 @@
             let resultRow = document.getElementById('erp-row-' + formulaId);
             if (resultRow) resultRow.classList.add('highlight-result-target');
         }
-        if (isClick && masterBox) { masterBox.classList.add('math-token-locked'); }
+        if (isClick && summaryBox) { summaryBox.classList.add('math-token-locked'); }
     };
 
     window.clearHighlights = function(force = false) {
@@ -602,10 +601,13 @@
             todasFiliais.forEach(f => {
                 let match = rule.filiaisDetalhe.find(d => d.filial === f);
                 let valPdf = match ? match.value : 0;
-                rule.filiaisCalculo[f] = { pdfVal: valPdf, calcVal: valPdf, memRecalcHtml: '', memPdfHtml: '' };
+                rule.filiaisCalculo[f] = { pdfVal: valPdf, calcVal: valPdf, memRecalcHtml: '', memPdfHtml: '', pdfValCalculated: 0 };
             });
         });
 
+        // ==========================================
+        // PROVA REAL TOTALMENTE RESTAURADA (Padrão Original)
+        // ==========================================
         rules.forEach(item => {
             if (item.tipo.includes('FÓRMULA') || item.tipo.includes('FORMULA')) {
                 let calcData = evaluateFormulaMath(item.formula, itemsMap, item.codigo);
@@ -616,6 +618,7 @@
                 todasFiliais.forEach(f => {
                     let calcFilial = evaluateFormulaMathPorFilial(item.formula, itemsMap, item.codigo, f);
                     item.filiaisCalculo[f].calcVal = calcFilial.calcVal;
+                    item.filiaisCalculo[f].pdfValCalculated = calcFilial.pdfValCalculated;
                     item.filiaisCalculo[f].memRecalcHtml = calcFilial.memRecalcHtml;
                     item.filiaisCalculo[f].memPdfHtml = calcFilial.memPdfHtml;
                 });
@@ -643,10 +646,13 @@
             if (itemsMap.has(id)) {
                 involvedIds.push(id);
                 let rawVal = itemsMap.get(id).calculatedValue || 0;
-                result += rawVal;
-                let operandValue = (operator === '-') ? -rawVal : rawVal;
+                
+                // MÁGICA RESTAURADA: Ele sempre soma o valor literal para respeitar o banco de dados.
+                result += rawVal; 
+                
+                // O operador do CSV serve APENAS para inverter o visual, se for negativo.
+                let operandValue = (operator === '-') ? -rawVal : rawVal; 
                 let colorRecalc = rawVal < 0 ? 'var(--danger)' : 'var(--success)';
-                let formattedOperand = formatBRL(operandValue);
                 
                 if (memRecalcHtml !== '') {
                     memRecalcHtml += `<span style="font-weight: 800; margin: 0 6px; color: var(--text-main);">${operator}</span>`;
@@ -654,8 +660,8 @@
                     memRecalcHtml += `<span style="font-weight: 800; margin: 0 6px 0 0; color: var(--text-main);">-</span>`;
                 }
                 
-                memRecalcHtml += `<span class="math-token" onmouseover="highlightRow(${id}, ${formulaId})" onmouseout="clearHighlights()" onclick="highlightRow(${id}, ${formulaId}, true, this)">
-                               <span style="font-size:0.75rem; color:#8ba3bb;">[${id}]</span> <span style="color: ${colorRecalc}; font-weight: 700;">${formattedOperand}</span>
+                memRecalcHtml += `<span class="math-token" onmouseover="highlightRow(${id}, ${formulaId})" onmouseout="clearHighlights()" onclick="event.stopPropagation(); highlightRow(${id}, ${formulaId}, true, this)">
+                               <span style="font-size:0.75rem; color:#8ba3bb;">[${id}]</span> <span style="color: ${colorRecalc}; font-weight: 700;">${formatBRL(operandValue)}</span>
                             </span>`;
             }
         }
@@ -663,7 +669,7 @@
     }
 
     function evaluateFormulaMathPorFilial(formulaStr, itemsMap, formulaId, filialNome) {
-        if (!formulaStr) return { calcVal: 0, memRecalcHtml: '', memPdfHtml: '' };
+        if (!formulaStr) return { calcVal: 0, pdfValCalculated: 0, memRecalcHtml: '', memPdfHtml: '' };
         let cleanExp = formulaStr.replace(/\([^)]+\)/g, '').trim().replace(/\s+/g, ''); 
         let tokenRegex = /([\+\-]?)(\d+)/g;
         let match; let resultCalc = 0; let resultPdf = 0; let memRecalcHtml = ''; let memPdfHtml = '';
@@ -679,11 +685,16 @@
                 let rawValCalc = fData.calcVal || 0;
                 let rawValPdf = fData.pdfVal || 0;
                 
-                resultCalc += rawValCalc;
-                resultPdf += rawValPdf;
+                // MÁGICA RESTAURADA: Regra diferente de soma para o ERP vs PDF
+                resultCalc += rawValCalc; 
+                let effectPdf = (operator === '-') ? -Math.abs(rawValPdf) : rawValPdf;
+                resultPdf += effectPdf;
 
+                let operandValueCalc = (operator === '-') ? -rawValCalc : rawValCalc;
                 let colorRecalc = rawValCalc < 0 ? 'var(--danger)' : 'var(--success)';
-                let colorPdf = rawValPdf < 0 ? 'var(--danger)' : 'var(--success)';
+                
+                let operandValuePdf = (operator === '-') ? -Math.abs(rawValPdf) : rawValPdf;
+                let colorPdf = operandValuePdf < 0 ? 'var(--danger)' : 'var(--success)';
                 
                 if (memRecalcHtml !== '') {
                     memRecalcHtml += `<span style="font-weight: 800; margin: 0 6px; color: var(--text-main);">${operator}</span>`;
@@ -693,16 +704,16 @@
                     memPdfHtml += `<span style="font-weight: 800; margin: 0 6px 0 0; color: var(--text-main);">-</span>`;
                 }
                 
-                memRecalcHtml += `<span class="math-token" onmouseover="highlightRow(${id}, ${formulaId})" onmouseout="clearHighlights()" onclick="highlightRow(${id}, ${formulaId}, true, this)">
-                               <span style="font-size:0.75rem; color:#8ba3bb;">[${id}]</span> <span style="color: ${colorRecalc}; font-weight: 700;">${formatBRL(rawValCalc)}</span>
+                memRecalcHtml += `<span class="math-token" onmouseover="highlightRow(${id}, ${formulaId})" onmouseout="clearHighlights()" onclick="event.stopPropagation(); highlightRow(${id}, ${formulaId}, true, this)">
+                               <span style="font-size:0.75rem; color:#8ba3bb;">[${id}]</span> <span style="color: ${colorRecalc}; font-weight: 700;">${formatBRL(operandValueCalc)}</span>
                             </span>`;
 
-                memPdfHtml += `<span class="math-token" onmouseover="highlightRow(${id}, ${formulaId})" onmouseout="clearHighlights()" onclick="highlightRow(${id}, ${formulaId}, true, this)">
-                               <span style="font-size:0.75rem; color:#8ba3bb;">[${id}]</span> <span style="color: ${colorPdf}; font-weight: 700;">${formatBRL(rawValPdf)}</span>
+                memPdfHtml += `<span class="math-token" onmouseover="highlightRow(${id}, ${formulaId})" onmouseout="clearHighlights()" onclick="event.stopPropagation(); highlightRow(${id}, ${formulaId}, true, this)">
+                               <span style="font-size:0.75rem; color:#8ba3bb;">[${id}]</span> <span style="color: ${colorPdf}; font-weight: 700;">${formatBRL(Math.abs(rawValPdf))}</span>
                             </span>`;
             }
         }
-        return { calcVal: resultCalc, memRecalcHtml: memRecalcHtml.trim(), memPdfHtml: memPdfHtml.trim() };
+        return { calcVal: resultCalc, pdfValCalculated: resultPdf, memRecalcHtml: memRecalcHtml.trim(), memPdfHtml: memPdfHtml.trim() };
     }
 
     function renderTabFormulasMath(rules) {
@@ -755,12 +766,10 @@
             `;
 
             if (hasDetails) {
-                // Monta toda a área de expansão e coloca num wrapper "master-detail-box" com um ID único
                 let detalheConteudo = `<div class="master-detail-box" id="master-box-${rule.codigo}">`;
                 
                 if (isFormula) {
                     
-                    // Constrói a fórmula consolidada do PDF
                     let literalPdfCalcResult = 0;
                     let memPdfHtmlConsolidated = '';
                     let cleanExp = formulaStr.replace(/\([^)]+\)/g, '').trim().replace(/\s+/g, ''); 
@@ -775,40 +784,61 @@
                             let effectPdf = (operator === '-') ? -Math.abs(pdfVal) : pdfVal;
                             literalPdfCalcResult += effectPdf;
                             
-                            let colorPdf = effectPdf < 0 ? 'var(--danger)' : 'var(--success)';
+                            let operandValuePdfConsolidated = (operator === '-') ? -Math.abs(pdfVal) : pdfVal;
+                            let colorPdf = operandValuePdfConsolidated < 0 ? 'var(--danger)' : 'var(--success)';
+                            
                             if (memPdfHtmlConsolidated !== '') {
                                 memPdfHtmlConsolidated += `<span style="font-weight: 800; margin: 0 6px; color: var(--text-main);">${operator}</span>`;
                             } else if (operator === '-') {
                                 memPdfHtmlConsolidated += `<span style="font-weight: 800; margin: 0 6px 0 0; color: var(--text-main);">-</span>`;
                             }
-                            memPdfHtmlConsolidated += `<span class="math-token" onmouseover="highlightRow(${id}, ${rule.codigo})" onmouseout="clearHighlights()" onclick="highlightRow(${id}, ${rule.codigo}, true, this)"><span style="font-size:0.75rem; color:#8ba3bb;">[${id}]</span> <span style="color: ${colorPdf}; font-weight: 700;">${formatBRL(Math.abs(pdfVal))}</span></span>`;
+                            memPdfHtmlConsolidated += `<span class="math-token" onmouseover="highlightRow(${id}, ${rule.codigo})" onmouseout="clearHighlights()" onclick="event.stopPropagation(); highlightRow(${id}, ${rule.codigo}, true, this)"><span style="font-size:0.75rem; color:#8ba3bb;">[${id}]</span> <span style="color: ${colorPdf}; font-weight: 700;">${formatBRL(Math.abs(pdfVal))}</span></span>`;
                         }
                     }
 
-                    let finalResultSign = visualCalcValue < 0 ? '-' : '';
-                    let cleanBrlResult = formatBRL(Math.abs(visualCalcValue));
+                    // Formatadores exatos que resgatam o sinal final da string ("= - R$ 2.570,69")
+                    let finalResultSign = visualCalcValue < 0 ? '- ' : '';
+                    let cleanBrlResult = formatBRL(Math.abs(visualCalcValue)).replace(/[R\$\(\)\s]/g, '').trim();
                     
-                    let finalPdfSign = literalPdfCalcResult < 0 ? '-' : '';
-                    let cleanBrlPdf = formatBRL(Math.abs(literalPdfCalcResult));
+                    let finalPdfSign = literalPdfCalcResult < 0 ? '- ' : '';
+                    let cleanBrlPdf = formatBRL(Math.abs(literalPdfCalcResult)).replace(/[R\$\(\)\s]/g, '').trim();
+
+                    let diffInternaPdf = Math.round(Math.abs(Math.abs(literalPdfCalcResult) - Math.abs(rule.pdfValue)) * 100) / 100;
+                    let alertPdf = '';
+                    if (diffInternaPdf >= 0.01 && Math.abs(rule.pdfValue) > 0) {
+                        alertPdf = `
+                            <div style="color: #e74c3c; font-size: 0.75rem; margin-top: 8px; font-weight: 700; font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: 6px;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                Atenção: O valor impresso nesta linha no PDF é ${formatBRL(rule.pdfValue)} (Divergência de ${formatBRL(diffInternaPdf)} com as partes acima)
+                            </div>
+                        `;
+                    }
 
                     detalheConteudo += `
-                        <div class="math-token-group" onmouseover='highlightMultipleRows(${involvedIdsStr}, ${rule.codigo})' onmouseout='clearHighlights()' onclick='highlightMultipleRows(${involvedIdsStr}, ${rule.codigo}, true, document.getElementById("master-box-${rule.codigo}"))'>
-                            <span style="font-size: 1.2rem; flex-shrink: 0;">🎯</span>
-                            <span style="flex-shrink: 0;"><b>Regra Aplicada (CSV):</b></span>
-                            <span style="font-family: 'Fira Code', monospace; font-weight: 800; font-size: 1.1rem;">${formulaStr}</span>
-                        </div>
-                        
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;">
-                            <div>
-                                <span style="font-weight: 800; font-size: 0.75rem; color: #1e6153; text-transform: uppercase; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">🧮 Total Consolidado (Recálculo ERP):</span>
-                                <div class="inner-box">
-                                    ${memoryRecalcHtml} <b style="color: ${visualCalcValue < 0 ? 'var(--danger)' : 'var(--primary)'}; font-family: 'Inter', sans-serif; margin-left: 8px;"> = ${finalResultSign}${cleanBrlResult}</b>
-                                </div>
+                        <div class="summary-math-box" id="summary-box-${rule.codigo}"
+                             onmouseover='highlightMultipleRows(${involvedIdsStr}, ${rule.codigo})' 
+                             onmouseout='clearHighlights()' 
+                             onclick='highlightMultipleRows(${involvedIdsStr}, ${rule.codigo}, true, this)'>
+                            
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+                                <span style="font-size: 1.2rem; flex-shrink: 0;">🎯</span>
+                                <span style="font-size: 0.95rem; color: #1e6153; flex-shrink: 0;"><b>Regra Aplicada (CSV):</b></span>
+                                <span style="font-family: 'Fira Code', monospace; font-weight: 800; font-size: 1.1rem; color: #1e6153;">${formulaStr}</span>
                             </div>
-                            <div>
-                                <span style="font-weight: 800; font-size: 0.75rem; color: #5b7f9b; text-transform: uppercase; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">📄 Total Consolidado (Extraído do PDF):</span>
-                                <div class="inner-box">
-                                    ${memPdfHtmlConsolidated} <b style="color: ${literalPdfCalcResult < 0 ? 'var(--danger)' : 'var(--primary)'}; font-family: 'Inter', sans-serif; margin-left: 8px;"> = ${finalPdfSign}${cleanBrlPdf}</b>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <div>
+                                    <span style="font-weight: 800; font-size: 0.75rem; color: #1e6153; text-transform: uppercase; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">🧮 Total Consolidado (Recálculo ERP):</span>
+                                    <div class="inner-box">
+                                        ${memoryRecalcHtml} <b style="color: ${visualCalcValue < 0 ? 'var(--danger)' : 'var(--primary)'}; font-family: 'Inter', sans-serif; margin-left: 8px;"> = ${finalResultSign}R$ ${cleanBrlResult}</b>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span style="font-weight: 800; font-size: 0.75rem; color: #5b7f9b; text-transform: uppercase; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">📄 Total Consolidado (Extraído do PDF):</span>
+                                    <div class="inner-box">
+                                        ${memPdfHtmlConsolidated} <b style="color: ${literalPdfCalcResult < 0 ? 'var(--danger)' : 'var(--primary)'}; font-family: 'Inter', sans-serif; margin-left: 8px;"> = ${finalPdfSign}R$ ${cleanBrlPdf}</b>
+                                    </div>
+                                    ${alertPdf}
                                 </div>
                             </div>
                         </div>
@@ -837,7 +867,7 @@
                     `;
                     
                     filiaisOrdenadas.forEach(fName => {
-                        let fData = rule.filiaisCalculo ? rule.filiaisCalculo[fName] : { pdfVal: rule.filiaisDetalhe.find(x=>x.filial === fName).value, calcVal: rule.filiaisDetalhe.find(x=>x.filial === fName).value, memRecalcHtml: '', memPdfHtml: '' };
+                        let fData = rule.filiaisCalculo ? rule.filiaisCalculo[fName] : { pdfVal: rule.filiaisDetalhe.find(x=>x.filial === fName).value, calcVal: rule.filiaisDetalhe.find(x=>x.filial === fName).value, memRecalcHtml: '', memPdfHtml: '', pdfValCalculated: 0 };
                         if (!fData || (Math.abs(fData.pdfVal) < 0.01 && Math.abs(fData.calcVal) < 0.01 && !fData.memRecalcHtml)) return;
 
                         let subDetailClass = `sub-filial-${index}-${fName.replace(/[^a-zA-Z0-9]/g, '')}`;
@@ -882,6 +912,23 @@
                         `;
 
                         if (isFormula) {
+                            let finalResultSignFilial = visualCalcValueBranch < 0 ? '- ' : '';
+                            let cleanBrlResultFilial = formatBRL(Math.abs(visualCalcValueBranch)).replace(/[R\$\(\)\s]/g, '').trim();
+                            
+                            let finalPdfSignFilial = fData.pdfValCalculated < 0 ? '- ' : '';
+                            let cleanBrlPdfFilial = formatBRL(Math.abs(fData.pdfValCalculated)).replace(/[R\$\(\)\s]/g, '').trim();
+
+                            let diffInternaFilial = Math.round(Math.abs(Math.abs(fData.pdfValCalculated) - Math.abs(fData.pdfVal)) * 100) / 100;
+                            let alertPdfFilial = '';
+                            if (diffInternaFilial >= 0.01 && Math.abs(fData.pdfVal) > 0) {
+                                alertPdfFilial = `
+                                    <div style="color: #e74c3c; font-size: 0.65rem; margin-top: 6px; font-weight: 700; font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: 4px;">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                        Atenção: O valor impresso nesta linha na Filial é ${formatBRL(fData.pdfVal)}
+                                    </div>
+                                `;
+                            }
+
                             detalheConteudo += `
                                 <tr class="sub-detail-formula ${subDetailClass}" style="display: none;">
                                     <td colspan="5" style="padding: 12px 16px 16px 48px; border-bottom: 1px solid var(--border-highlight);">
@@ -889,14 +936,15 @@
                                             <div>
                                                 <span style="font-weight: 800; font-size: 0.7rem; color: #1e6153; text-transform: uppercase; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">🧮 Equação isolada desta filial (Recálculo):</span>
                                                 <div class="inner-box">
-                                                    ${fData.memRecalcHtml} <b style="color: ${visualCalcValueBranch < 0 ? 'var(--danger)' : 'var(--primary)'}; font-family: 'Inter', sans-serif; margin-left: 8px;"> = ${fCalcStr}</b>
+                                                    ${fData.memRecalcHtml} <b style="color: ${visualCalcValueBranch < 0 ? 'var(--danger)' : 'var(--primary)'}; font-family: 'Inter', sans-serif; margin-left: 8px;"> = ${finalResultSignFilial}R$ ${cleanBrlResultFilial}</b>
                                                 </div>
                                             </div>
                                             <div>
                                                 <span style="font-weight: 800; font-size: 0.7rem; color: #5b7f9b; text-transform: uppercase; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">📄 Equação isolada desta filial (PDF):</span>
                                                 <div class="inner-box">
-                                                    ${fData.memPdfHtml} <b style="color: ${fData.pdfVal < 0 ? 'var(--danger)' : 'var(--primary)'}; font-family: 'Inter', sans-serif; margin-left: 8px;"> = ${fPdf}</b>
+                                                    ${fData.memPdfHtml} <b style="color: ${fData.pdfValCalculated < 0 ? 'var(--danger)' : 'var(--primary)'}; font-family: 'Inter', sans-serif; margin-left: 8px;"> = ${finalPdfSignFilial}R$ ${cleanBrlPdfFilial}</b>
                                                 </div>
+                                                ${alertPdfFilial}
                                             </div>
                                         </div>
                                     </td>
@@ -911,7 +959,7 @@
                     `;
                 }
 
-                detalheConteudo += `</div>`; // Fim da master-detail-box
+                detalheConteudo += `</div>`;
 
                 tbody.innerHTML += `
                     <tr class="detail-row ${isFormula ? 'is-formula-detail' : ''} ${safeClass} last-child" style="display: none;">
