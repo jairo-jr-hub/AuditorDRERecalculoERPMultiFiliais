@@ -120,9 +120,9 @@
         .detail-row.last-child td { border-bottom: 2px solid var(--primary) !important; }
         .detail-row.last-child.is-formula-detail td { border-bottom: 2px solid var(--success) !important; }
 
-        /* Sub Tabela de Filiais (UI/UX Melhorado) */
+        /* Sub Tabela de Filiais */
         .sub-table { width: 100%; border-collapse: collapse; margin-top: 8px; background: #ffffff; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-highlight); }
-        .sub-table th { background: #eef2f7; color: #5b7f9b; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; padding: 6px 12px; border-bottom: 1px solid var(--border-highlight); letter-spacing: 0.5px;}
+        .sub-table th { background: #eef2f7; color: #1a5d7d; font-size: 0.75rem; font-weight: 700; padding: 8px 12px; border-bottom: 2px solid var(--border-highlight); font-family: 'Inter', sans-serif;}
         .sub-table td { padding: 6px 12px; font-size: 0.75rem; border-bottom: 1px solid #f0f5fa; vertical-align: middle; }
         .sub-table tr:last-child td { border-bottom: none; }
         .sub-table tr:hover td { background-color: #f8fbff; }
@@ -138,18 +138,43 @@
 
         /* Tokens Matemáticos Clicáveis */
         .math-token { cursor: pointer; border-radius: 4px; padding: 2px 6px; margin: -2px 0; transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s; display: inline-block; font-family: 'Fira Code', monospace; }
-        .math-token:hover { background-color: #e6f4f1; }
+        .math-token:hover { background-color: #d1efe8; }
         .math-token:active { transform: scale(0.98); }
-        .math-token-group { cursor: pointer; display: inline-block; font-family: 'Inter', sans-serif;}
         
+        /* O "Card" da Regra Aplicada (Verde -> Amarelo) */
+        .math-token-group {
+            font-size: 0.85rem; font-weight: 700; color: #1e6153; 
+            background: #e6f4f1; padding: 8px 14px; border-radius: 6px; 
+            border: 1px solid #a3d9cf; cursor: pointer; width: 100%; 
+            margin-bottom: 12px; display: flex; align-items: center; gap: 6px; 
+            transition: all 0.2s;
+        }
+        .math-token-group:hover {
+            background: #d8f0eb; border-color: #89ccbd; transform: translateY(-1px); box-shadow: 0 2px 4px rgba(42,127,110,0.1);
+        }
+        .math-token-group:active {
+            transform: translateY(0); box-shadow: none;
+        }
+        
+        /* Destaques (Highlight Targets) */
         tbody tr.highlight-row-target td, tbody tr.highlight-row-target.row-is-formula td, tbody tr.highlight-row-target.parent-expanded td, tbody tr.highlight-row-target.parent-expanded.row-is-formula td { background-color: #fff8cd !important; }
         tbody tr.highlight-row-target td:first-child, tbody tr.highlight-row-target.row-is-formula td:first-child, tbody tr.highlight-row-target.parent-expanded td:first-child, tbody tr.highlight-row-target.parent-expanded.row-is-formula td:first-child { box-shadow: inset 4px 0 0 0 #fbc02d !important; }
 
         tbody tr.highlight-result-target td, tbody tr.highlight-result-target.row-is-formula td, tbody tr.highlight-result-target.parent-expanded td, tbody tr.highlight-result-target.parent-expanded.row-is-formula td { background-color: #e0e7ff !important; }
         tbody tr.highlight-result-target td:first-child, tbody tr.highlight-result-target.row-is-formula td:first-child, tbody tr.highlight-result-target.parent-expanded td:first-child, tbody tr.highlight-result-target.parent-expanded.row-is-formula td:first-child { box-shadow: inset 4px 0 0 0 #6366f1 !important; }
 
-        .memoria-box.math-token-locked { background-color: #fff8cd !important; border-color: #fbc02d !important; border-style: solid !important; border-width: 2px; }
-        .math-token.math-token-locked { background-color: #fff8cd !important; box-shadow: inset 0 0 0 1px #fbc02d !important; }
+        /* Lock do Clique */
+        .math-token-group.math-token-locked, .memoria-box.math-token-locked { 
+            background-color: #fff8cd !important; 
+            border-color: #fbc02d !important; 
+            color: #8c6a00 !important;
+        }
+        .math-token-group.math-token-locked span { color: #8c6a00 !important; }
+        
+        .math-token.math-token-locked { 
+            background-color: #fff8cd !important; 
+            box-shadow: inset 0 0 0 1px #fbc02d !important; 
+        }
 
         @media print {
             body { background: #fff !important; padding: 0 !important; color: #000 !important; }
@@ -420,7 +445,6 @@
         let currentFilial = "Padrão"; 
         
         linhas.forEach(line => {
-            // Regex melhorado para capturar a linha inteira da filial e pegar o nome completo se existir
             let matchFilial = line.match(/Filial:\s*(.+)/i);
             if (matchFilial) {
                 currentFilial = matchFilial[1].trim();
@@ -559,7 +583,7 @@
             todasFiliais.forEach(f => {
                 let match = rule.filiaisDetalhe.find(d => d.filial === f);
                 let valPdf = match ? match.value : 0;
-                rule.filiaisCalculo[f] = { pdfVal: valPdf, calcVal: valPdf, memRecalcHtml: '' };
+                rule.filiaisCalculo[f] = { pdfVal: valPdf, calcVal: valPdf, memRecalcHtml: '', memPdfHtml: '' };
             });
         });
 
@@ -574,6 +598,7 @@
                     let calcFilial = evaluateFormulaMathPorFilial(item.formula, itemsMap, item.codigo, f);
                     item.filiaisCalculo[f].calcVal = calcFilial.calcVal;
                     item.filiaisCalculo[f].memRecalcHtml = calcFilial.memRecalcHtml;
+                    item.filiaisCalculo[f].memPdfHtml = calcFilial.memPdfHtml;
                 });
 
             } else {
@@ -619,10 +644,10 @@
     }
 
     function evaluateFormulaMathPorFilial(formulaStr, itemsMap, formulaId, filialNome) {
-        if (!formulaStr) return { calcVal: 0, memRecalcHtml: '' };
+        if (!formulaStr) return { calcVal: 0, memRecalcHtml: '', memPdfHtml: '' };
         let cleanExp = formulaStr.replace(/\([^)]+\)/g, '').trim().replace(/\s+/g, ''); 
         let tokenRegex = /([\+\-]?)(\d+)/g;
-        let match; let resultCalc = 0; let memRecalcHtml = '';
+        let match; let resultCalc = 0; let resultPdf = 0; let memRecalcHtml = ''; let memPdfHtml = '';
 
         while ((match = tokenRegex.exec(cleanExp)) !== null) {
             let operator = match[1] || '+'; 
@@ -630,25 +655,35 @@
             
             if (itemsMap.has(id)) {
                 let item = itemsMap.get(id);
+                let fData = item.filiaisCalculo?.[filialNome] || { calcVal: 0, pdfVal: 0 };
                 
-                let rawVal = item.filiaisCalculo?.[filialNome]?.calcVal || 0;
-                resultCalc += rawVal;
-                let operandValue = (operator === '-') ? -rawVal : rawVal;
-                let colorRecalc = rawVal < 0 ? 'var(--danger)' : 'var(--success)';
-                let formattedOperand = formatBRL(operandValue);
+                let rawValCalc = fData.calcVal || 0;
+                let rawValPdf = fData.pdfVal || 0;
+                
+                resultCalc += rawValCalc;
+                resultPdf += rawValPdf;
+
+                let colorRecalc = rawValCalc < 0 ? 'var(--danger)' : 'var(--success)';
+                let colorPdf = rawValPdf < 0 ? 'var(--danger)' : 'var(--success)';
                 
                 if (memRecalcHtml !== '') {
                     memRecalcHtml += `<span style="font-weight: 800; margin: 0 6px; color: var(--text-main);">${operator}</span>`;
+                    memPdfHtml += `<span style="font-weight: 800; margin: 0 6px; color: var(--text-main);">${operator}</span>`;
                 } else if (operator === '-') {
                     memRecalcHtml += `<span style="font-weight: 800; margin: 0 6px 0 0; color: var(--text-main);">-</span>`;
+                    memPdfHtml += `<span style="font-weight: 800; margin: 0 6px 0 0; color: var(--text-main);">-</span>`;
                 }
                 
                 memRecalcHtml += `<span class="math-token" onmouseover="highlightRow(${id}, ${formulaId})" onmouseout="clearHighlights()" onclick="highlightRow(${id}, ${formulaId}, true, this)">
-                               <span style="font-size:0.75rem; color:#8ba3bb;">[${id}]</span> <span style="color: ${colorRecalc}; font-weight: 700;">${formattedOperand}</span>
+                               <span style="font-size:0.75rem; color:#8ba3bb;">[${id}]</span> <span style="color: ${colorRecalc}; font-weight: 700;">${formatBRL(rawValCalc)}</span>
+                            </span>`;
+
+                memPdfHtml += `<span class="math-token" onmouseover="highlightRow(${id}, ${formulaId})" onmouseout="clearHighlights()" onclick="highlightRow(${id}, ${formulaId}, true, this)">
+                               <span style="font-size:0.75rem; color:#8ba3bb;">[${id}]</span> <span style="color: ${colorPdf}; font-weight: 700;">${formatBRL(rawValPdf)}</span>
                             </span>`;
             }
         }
-        return { calcVal: resultCalc, memRecalcHtml: memRecalcHtml.trim() };
+        return { calcVal: resultCalc, memRecalcHtml: memRecalcHtml.trim(), memPdfHtml: memPdfHtml.trim() };
     }
 
     function renderTabFormulasMath(rules) {
@@ -700,17 +735,15 @@
                 </tr>
             `;
 
-            // Construção da área de detalhes
             if (hasDetails) {
                 let detalheConteudo = '';
                 
                 if (isFormula) {
+                    // Barra da Regra Aplicada inteira clicável com class "math-token-group" manipulada pelo CSS
                     detalheConteudo += `
-                        <div style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
-                            <span style="font-size: 0.8rem; font-weight: 800; color: #1e6153; text-transform: uppercase;">Regra Aplicada (CSV):</span>
-                            <span class="math-token-group" style="font-family: 'Fira Code', monospace; font-size: 0.85rem; background: #e6f4f1; padding: 4px 10px; border-radius: 6px; color: var(--success); font-weight: 700; display: inline-block; border: 1px solid #a3d9cf;" onmouseover='highlightMultipleRows(${involvedIdsStr}, ${rule.codigo})' onmouseout='clearHighlights()' onclick='highlightMultipleRows(${involvedIdsStr}, ${rule.codigo}, true, this)'>
-                                ${formulaStr}
-                            </span>
+                        <div class="math-token-group" onmouseover='highlightMultipleRows(${involvedIdsStr}, ${rule.codigo})' onmouseout='clearHighlights()' onclick='highlightMultipleRows(${involvedIdsStr}, ${rule.codigo}, true, this)'>
+                            <span><b>Regra Aplicada (CSV):</b></span>
+                            <span style="font-family: 'Fira Code', monospace; font-weight: 700;">${formulaStr}</span>
                         </div>
                     `;
                 }
@@ -722,16 +755,16 @@
                         filiaisOrdenadas = rule.filiaisDetalhe.map(d => d.filial).sort((a, b) => a.localeCompare(b, undefined, {numeric: true}));
                     }
 
-                    // Tabela aninhada para as filiais (Colunas e alinhamento elegante)
+                    // Tabela aninhada com Captions idênticos aos da tabela principal
                     detalheConteudo += `
                         <div style="background: #ffffff; border-radius: 8px; border: 1px solid var(--border-highlight); overflow: hidden; margin-top: 4px;">
                             <table class="sub-table" style="margin: 0; border: none;">
                                 <thead>
                                     <tr>
                                         <th style="text-align: left; width: 40%;">🏢 Identificação da Filial</th>
-                                        <th style="text-align: right; width: 15%;">PDF (Original)</th>
-                                        <th style="text-align: right; width: 15%;">Cálculo ERP</th>
-                                        <th style="text-align: right; width: 15%;">Diferença</th>
+                                        <th style="text-align: right; width: 15%;">(A) Total Agrupado (PDF)</th>
+                                        <th style="text-align: right; width: 15%;">(B) Recálculo Fórmula</th>
+                                        <th style="text-align: right; width: 15%;">Diferença (A - B)</th>
                                         <th style="text-align: center; width: 15%;">Status</th>
                                     </tr>
                                 </thead>
@@ -739,7 +772,7 @@
                     `;
                     
                     filiaisOrdenadas.forEach(fName => {
-                        let fData = rule.filiaisCalculo ? rule.filiaisCalculo[fName] : { pdfVal: rule.filiaisDetalhe.find(x=>x.filial === fName).value, calcVal: rule.filiaisDetalhe.find(x=>x.filial === fName).value, memRecalcHtml: '' };
+                        let fData = rule.filiaisCalculo ? rule.filiaisCalculo[fName] : { pdfVal: rule.filiaisDetalhe.find(x=>x.filial === fName).value, calcVal: rule.filiaisDetalhe.find(x=>x.filial === fName).value, memRecalcHtml: '', memPdfHtml: '' };
                         if (!fData || (Math.abs(fData.pdfVal) < 0.01 && Math.abs(fData.calcVal) < 0.01 && !fData.memRecalcHtml)) return;
 
                         let subDetailClass = `sub-filial-${index}-${fName.replace(/[^a-zA-Z0-9]/g, '')}`;
@@ -766,7 +799,6 @@
                             ? `<button class="sub-btn" data-target="${subDetailClass}" onclick="toggleDetails(this, '${subDetailClass}')">+</button>`
                             : `<span style="display:inline-block; width:24px;"></span>`;
 
-                        // Limita o nome visual da filial para não quebrar o layout se for enorme
                         let displayFName = fName.length > 50 ? fName.substring(0, 47) + '...' : fName;
 
                         detalheConteudo += `
@@ -774,7 +806,7 @@
                                 <td style="text-align: left; font-weight: 700; color: var(--primary);">
                                     <div style="display:flex; align-items:center;">
                                         ${btnSubExpandHtml} 
-                                        <span title="${fName}">${displayFName}</span>
+                                        <span title="${fName}">Filial: ${displayFName}</span>
                                     </div>
                                 </td>
                                 <td style="text-align: right; font-family: 'Fira Code', monospace; color: ${fData.pdfVal < 0 ? 'var(--danger)' : 'var(--text-main)'}; font-weight: 500;">${fPdf}</td>
@@ -784,14 +816,24 @@
                             </tr>
                         `;
 
-                        // A Linha de Fórmula Interna inserida no corpo da tabela
+                        // Equações duplicadas lado a lado para comparação Recálculo (ERP) vs PDF (Impresso)
                         if (isFormula) {
                             detalheConteudo += `
                                 <tr class="${subDetailClass}" style="display: none; background: #fdfdfd;">
                                     <td colspan="5" style="padding: 12px 16px 12px 48px; border-bottom: 2px solid var(--border-highlight); box-shadow: inset 4px 0 0 0 #a3d9cf;">
-                                        <div style="font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.65rem; color: #1e6153; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">🧮 Equação isolada desta filial:</div>
-                                        <div style="font-size: 0.75rem; font-family: 'Fira Code', monospace;">
-                                            ${fData.memRecalcHtml} <b style="color: ${visualCalcValueBranch < 0 ? 'var(--danger)' : 'var(--primary)'}; font-family: 'Inter', sans-serif; margin-left: 8px;"> = ${fCalcStr}</b>
+                                        <div style="font-family: 'Inter', sans-serif; display: flex; flex-direction: column; gap: 8px;">
+                                            <div>
+                                                <span style="font-weight: 800; font-size: 0.7rem; color: #1e6153; text-transform: uppercase; display: block; margin-bottom: 2px; letter-spacing: 0.5px;">🧮 Equação isolada desta filial (Recálculo):</span>
+                                                <div style="font-size: 0.75rem; font-family: 'Fira Code', monospace; background: #fafafa; padding: 4px 8px; border-radius: 4px; border: 1px solid #eef2f5;">
+                                                    ${fData.memRecalcHtml} <b style="color: ${visualCalcValueBranch < 0 ? 'var(--danger)' : 'var(--primary)'}; font-family: 'Inter', sans-serif; margin-left: 8px;"> = ${fCalcStr}</b>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <span style="font-weight: 800; font-size: 0.7rem; color: #5b7f9b; text-transform: uppercase; display: block; margin-bottom: 2px; letter-spacing: 0.5px;">📄 Equação isolada desta filial (PDF):</span>
+                                                <div style="font-size: 0.75rem; font-family: 'Fira Code', monospace; background: #fafafa; padding: 4px 8px; border-radius: 4px; border: 1px solid #eef2f5;">
+                                                    ${fData.memPdfHtml} <b style="color: ${fData.pdfVal < 0 ? 'var(--danger)' : 'var(--primary)'}; font-family: 'Inter', sans-serif; margin-left: 8px;"> = ${fPdf}</b>
+                                                </div>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -845,7 +887,6 @@
             let tr = btn.closest('tr');
             if (tr && !tr.classList.contains('detail-row') && !tr.classList.contains('sub-detail-formula')) tr.classList.remove('parent-expanded');
             
-            // Recolhe filhas automaticamente
             elements.forEach(el => {
                 el.querySelectorAll('.sub-btn.open').forEach(subBtn => {
                     let subClass = subBtn.getAttribute('data-target');
